@@ -41,6 +41,7 @@ int main(void){ // Main
 
 	pAction->sa_handler = handler;
 	sigemptyset( &(pAction->sa_mask) );
+	pAction->sa_flags = SA_RESTART | SA_NOCLDSTOP;
 	if(sigaction(SIGUSR1, pAction, NULL) == 0)
 		printf("[%i] SIGUSER1 action ready...\n", getpid());
 	if(sigaction(SIGHUP, pAction, NULL) == 0)
@@ -76,9 +77,8 @@ int main(void){ // Main
 		}
 		else{ //parent process
 
-			do{
+	
 			wPID = waitpid(childPID, &status, 0);
-			}while(wPID == -1 && errno == EINTR);
 			
 			if(wPID == -1){ //things went wrong...
     		perror("wait error");
