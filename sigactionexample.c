@@ -71,35 +71,35 @@ int main(void){ // Main
 
 			printf("[%i] sending 1 SIGUSR1...\n\n", getpid());
 			kill( parentPID, SIGUSR1);
-			fflush(stdout);
 		  exit(0);
 
 		}
 		else{ //parent process
 
-	
+			do{
 			wPID = waitpid(childPID, &status, 0);
+			}while(wPID == -1 && errno == EINTR);
 			
 			if(wPID == -1){ //things went wrong...
     		perror("wait error");
     		return -1;
     	}
     	else{ //waitpid went ok...
-			free(pAction); 
-			pAction = NULL;
+				free(pAction); 
+				pAction = NULL;
 
-			if (WIFEXITED(status))
-      	printf("[%i] child exited, status=%d\n", getpid(), WEXITSTATUS(status));
-      else if (WIFSIGNALED(status))
-        printf("[%i] child killed (signal %d)\n", getpid(), WTERMSIG(status));
-      else if (WIFSTOPPED(status))
-        printf("[%i] child stopped (signal %d)\n", getpid(), WSTOPSIG(status));
-      else  /* Non-standard case -- may never happen */
-        printf("Unexpected status (0x%x)\n", status);
+				if (WIFEXITED(status))
+	      	printf("[%i] child exited, status=%d\n", getpid(), WEXITSTATUS(status));
+	      else if (WIFSIGNALED(status))
+	        printf("[%i] child killed (signal %d)\n", getpid(), WTERMSIG(status));
+	      else if (WIFSTOPPED(status))
+	        printf("[%i] child stopped (signal %d)\n", getpid(), WSTOPSIG(status));
+	      else  /* Non-standard case -- may never happen */
+	        printf("Unexpected status (0x%x)\n", status);
 
-			printf("[%i] Final counter values:   SIGHUP: %i, SIGUSR1: %i, SIGUSR2: %i\n", 
-			getpid(), sighup_counter, sigusr1_counter, sigusr2_counter);
-			return 0;
+				printf("[%i] Final counter values:   SIGHUP: %i, SIGUSR1: %i, SIGUSR2: %i\n", 
+				getpid(), sighup_counter, sigusr1_counter, sigusr2_counter);
+				return 0;
 		}
 		}
 	}
