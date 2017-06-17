@@ -13,11 +13,7 @@ int main(int argc, char * argv[]){
 	double x, result;
 	int n;
 
-	printf("%lu\n", sizeof(char *) );
-	printf("%lu\n", sizeof(pInput) );
-
 	memset(pInput, 0, 10 * sizeof(char *)); //set all memory to 0;
-
 
 	pInput[0] = malloc(10);
 	printf("Enter X:\n");
@@ -33,7 +29,11 @@ int main(int argc, char * argv[]){
 
 	result = power(x, n);
 
-		printf("result: %lf\n", result );
+	free(pInput[0]);
+	free(pInput[1]);
+	*pInput = NULL;
+
+	printf("result: %lf\n", result );
 
 	return 0;
 }
